@@ -1,0 +1,100 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">   
+<head>  
+<title></title>  
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.datatables.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.dataTables.min.css') }}">
+
+<style>
+tbody td{
+	text-align: center;
+}
+</style>
+
+</head>
+<body>
+
+<h1>文章导出</h1>
+<table id="example" class="display" role="grid" aria-describedby="example_info">
+	<thead>
+		<tr>
+			<th>事件ID</th>
+			<th>出处</th>
+			<th>标题</th>
+			<th>URL</th>
+			<th>开始时间</th>
+		</tr>
+	</thead>
+	<tbody>	
+	</tbody>
+</table>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.datatables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buttons.flash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pdfmake.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vfs_fonts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+<script>
+
+    $(document).ready(function(){
+
+        {% for i in log %}
+            $("#example tbody").append("<tr><td>"+"{{ i.px }}"+"</td><td>"+"{{ i.name }}"+"</td><td>"+"{{ i.title }}"+"</td><td>"+"{{ i.url }}"+"</td><td>"+"{{ i.time }}"+"</td></tr>");
+        {% endfor %}
+	
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		language: {  
+			emptyTable: '没有数据',  
+			loadingRecords: '加载中...',  
+			processing: '查询中...',  
+			search: '检索:',  
+			lengthMenu: '每页 _MENU_ 件',  
+			zeroRecords: '没有数据',  
+			paginate: {  
+				'first':      '第一页',  
+				'last':       '最后一页',  
+				'next':       '下一页',  
+				'previous':   '上一页'  
+			},  
+			info: '第 _PAGE_ 页 / 总 _PAGES_ 页',  
+			infoEmpty: '没有数据',
+			infoFiltered: '(过滤总件数 _MAX_ 条)',
+		},
+		buttons: [
+			{
+				extend: 'copyHtml5',
+			},
+			{
+				extend: 'excelHtml5',
+				title: 'Data export'
+			},
+			{
+				extend: 'pdfHtml5',
+				title: 'Data export'
+			},
+			{
+				extend: 'csvHtml5',
+				title: 'Data export'
+			},
+			{
+				extend:'print',
+			}
+		]
+	} );
+	
+	$(".buttons-copy").text('复制');
+	$(".buttons-excel").text('导出到excel');
+	$(".buttons-pdf").text('导出到pdf');
+	$(".buttons-csv").text('导出到csv');
+	$(".buttons-print").text('打印');
+
+});
+</script>
+
+</body>

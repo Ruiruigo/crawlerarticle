@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete</title>
+</head>
+<body>
+<h1>保留以下</h1>
+{% for i in addTXT %}
+    {{ i }}
+    <br>
+{% endfor %}
+<h1>删除以下</h1>
+{% for i in delTXT %}
+    {{ i }}
+    <br>
+{% endfor %}
+<br>
+<a href="./" style="text-decoration: none"><h1>>>展示链接<<</h1></a>
+</body>
+</html>

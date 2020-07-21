@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Get</title>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript">
+var b;
+$(document).ready(function(){
+  $("button").mouseover(function(){
+    b = "#" + $(this).attr("id");
+    $("button").click(function(){
+    $(b).remove();
+    });
+  });
+});
+$(document).ready(function(){
+  $("button").onmouseout(function(){
+  b = "";
+  });
+});
+
+</script>
+</head>
+<body>
+<form action="/add" method="post">
+{% for i in data %}
+    <div id="{{ i.id }}">
+            <label>
+                <input type="checkbox" name="txt" value="{{ i }}" checked="checked" style="display:none"><a href="{{ i.url }}" style="text-decoration: none">{{ i.name }} | {{ i.title }}</a>
+            </label>
+        <button id="{{ i.id }}">add</button>
+        </div>
+{% endfor %}
+<input type="submit" value="提交" />
+</form>
+</body>
+</html>

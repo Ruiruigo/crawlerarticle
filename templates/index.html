@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" http-equiv="refresh" content="20">
+<title>TEST</title>
+<style>
+* { margin: 0; padding: 0;list-style:none;}
+.myscroll {
+    width: 900px;
+    height: 260px;
+    margin: 0 auto;
+    line-height: 26px;
+    font-size: 12px;
+    overflow: hidden;
+    border:2px solid white;
+    border-top: 0;
+}
+.myscroll li {
+    height: 30px;
+    width: 900px;
+    font-size:14px;
+}
+.qwer{
+    width: 900px;
+    height: 26px;
+    margin: 0 auto;
+    line-height: 26px;
+    font-size: 12px;
+    overflow: hidden;
+    border:2px solid white;
+    border-bottom: 0;
+}
+.myscroll a {
+    color: white;
+    text-decoration: none;
+}
+.myscroll a:hover {
+    color: white;
+    text-decoration: underline;
+}
+.qwer li{
+  height: 30px;
+  width: 900px;
+  font-size: 20px;
+}
+.source{
+  float: left;
+  width: 100px;
+  text-align: center;
+  border-right: 1px solid white;
+}
+.title{
+  float: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 50px;
+  width: 500px;
+  height: 26px;
+}
+.title1{
+  float: left;
+  width: 520px;
+  height: 26px;
+  text-align: center;
+}
+
+.time{
+  float: left;
+  width: 100px;
+  height: 26px;
+  text-align: center;
+}
+
+.time1{
+  float: left;
+  width: 100px;
+  height: 26px;
+  text-align: center;
+  padding-left: 30px;
+}
+
+</style>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript">
+(function($){
+    $.fn.myScroll = function(options){
+    //默认配置
+    var defaults = {
+        speed:40, //滚动速度,值越大速度越慢
+        rowHeight:24 //每行的高度
+    };
+
+    var opts = $.extend({}, defaults, options),
+        intId = [];
+
+    function marquee(obj, step){
+
+        obj.find("ul").animate({//html中必须有的ul
+            marginTop: '-=1'
+        },0,function(){
+                var s = Math.abs(parseInt($(this).css("margin-top")));
+                if(s >= step){
+                    $(this).find("li").slice(0, 1).appendTo($(this));//截取ul中的第一个li,添加到ul的最后
+                    $(this).css("margin-top", 0);
+                }
+            });
+        }
+
+        this.each(function(i){
+            var rowHeight = opts["rowHeight"],
+                speed = opts["speed"],
+                _this = $(this);//这里的_this指向div.myscroll
+
+            intId[i] = setInterval(function(){
+                if(_this.find("ul").height()<=_this.height()){//当ul的高度小于html中，div.myscroll的高度，则结束定时器
+                    clearInterval(intId[i]);
+                }else{
+                    marquee(_this, rowHeight);
+                }
+            }, speed);
+
+            _this.hover(function(){//鼠标移动到div.myscroll上时，结束定时器
+                clearInterval(intId[i]);
+            },function(){//鼠标离开div.myscroll容器，判断ul的高度若小于等于div.myscroll高度，则结束定时器（不滚动），否则调用marquee函数
+                intId[i] = setInterval(function(){
+                    if(_this.find("ul").height()<=_this.height()){
+                        clearInterval(intId[i]);
+                    }else{
+                        marquee(_this, rowHeight);
+                    }
+                }, speed);
+            });
+        });
+    }
+})(jQuery);
+$(function(){
+    $('.myscroll').myScroll({
+        speed: 50, //数值越大，速度越慢
+        rowHeight: 30 //li的高度
+    });
+});
+</script>
+</head>
+<body style="background-color:#6794ff;">
+  <div class="qwer">
+    <li style="background-color:rgba(255,208,126,0.86);"><a class="source">来源</a><a class="title1">标题</a><a class="time1">时间</a></li>
+  </div>
+    <div class="myscroll">
+        <ul>
+            {% for i in txt %}
+                {% if i.px % 2 == 0 %}
+                    <li style="background-color:rgba(17,17,17,0.27);"><a class="source">{{ i.name }}</a><a class="title" href="{{ i.url }}" target="_blank">{{ i.title }}</a><a class="time">{{ i.time }}</a></li>
+                {% else %}
+                    <li style="background-color:rgba(0,0,0,0.56);"><a class="source">{{ i.name }}</a><a class="title" href="{{ i.url }}" target="_blank">{{ i.title }}</a><a class="time">{{ i.time }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
